@@ -3,11 +3,11 @@
         <div>
             <ion-header>
                 <ion-toolbar>
-                    <ion-title>Départements</ion-title>
+                    <ion-title>Régions</ion-title>
                 </ion-toolbar>
             </ion-header>
             <ion-item>
-                <ion-label position="floating">Code département</ion-label>
+                <ion-label position="floating">Code région</ion-label>
                 <ion-input :value="zipcode" @input="zipcode = $event.target.value"></ion-input>
             </ion-item>
             <div class="ion-padding">
@@ -18,15 +18,15 @@
             </div>
         </div>
         <ion-content>
-            <ion-card class="ion-padding" v-for="item in array">
-                <ion-card-title>{{ item.nom }}</ion-card-title>
-                <ion-card-subtitle>Code postal : {{ item.codesPostaux[0] }}</ion-card-subtitle>
-                <ion-card-subtitle>Code département : {{ item.codeDepartement }}</ion-card-subtitle>
-                <ion-card-subtitle>Population : {{ item.population }}</ion-card-subtitle>
+            <ion-card v-for="item in array">
+                <ion-card-header>
+                    <ion-card-title>{{ item.nom }}</ion-card-title>
+                    <ion-card-subtitle>Code postal : {{ item.code }}</ion-card-subtitle>
+                    <ion-card-subtitle>Code région : {{ item.codeRegion }}</ion-card-subtitle>
+                </ion-card-header>
             </ion-card>
         </ion-content>
         <container/>
-
     </div>
 </template>
 
@@ -40,7 +40,7 @@
         },
         data() {
             return {
-                zipcode: '',
+                zipcode: null,
                 array: []
             }
         },
@@ -48,11 +48,11 @@
             sendForm() {
                 let reg = /[0-9]{2}/
                 if (reg.test(this.zipcode)) {
-                    this.$http.get('https://geo.api.gouv.fr/departements/' + this.zipcode + '/communes').then(res => {
+                    this.$http.get('https://geo.api.gouv.fr/regions/' + this.zipcode + '/departements').then(res => {
                         this.array = res.data
                     })
-                }else {
-                    this.presentAlert('Le code postal ou la ville est incorrecte')
+                } else {
+                    this.presentAlert('Le code ou la région est incorrecte')
                 }
                 this.zipcode = null
             },
